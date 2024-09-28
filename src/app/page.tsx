@@ -1,68 +1,27 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import React from "react";
 
 export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+        <div>
+          <h1>Bienvenido al Portal de Administrador</h1>
         </div>
       </main>
       <footer className={styles.footer}>
+        <p>© 2024 Parrot Software</p>
+        <p>Todos los derechos reservados</p>
         <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          href="https://parrotsoftware.com.mx/aviso-privacidad?__hstc=250815641.44261172114dfcd3aeaf52a548be70d6.1727389335489.1727550771062.1727553228823.5&__hssc=250815641.15.1727553228823&__hsfp=2015686276&_gl=1*7rwmi4*_gcl_au*MTM3ODEyNTA3OS4xNzI3Mzg5MzM1"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
+          Aviso de privacidad
         </a>
         <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          href="https://parrotsoftware.com.mx/programa-de-lealtad-parrot"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -73,21 +32,14 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Examples
+          Conoce nuestro programa de lealtad
         </a>
         <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          href="https://parrotsoftware.com.mx/preguntas-frecuentes-software-pos-para-restaurantes-en-mexico"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
+          Preguntas frecuentas
         </a>
       </footer>
     </div>
