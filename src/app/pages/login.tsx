@@ -1,13 +1,14 @@
 'use client';
+
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { AppDispatch, RootState } from '@/app/lib/store';
 import { login } from '@/app/lib/features/auth/authSlice';
 
 const Login = () => {
-  const dispatch: AppDispatch = useDispatch(); 
-  const router = useRouter();
+  const dispatch: AppDispatch = useDispatch();
+  // const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const error = useSelector((state: RootState) => state.auth.error);
@@ -15,9 +16,9 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const resultAction = await dispatch(login({ username, password }));
-    
+
     if (login.fulfilled.match(resultAction)) {
-      router.push('/dashboard');
+      // router.push('/dashboard');
     }
   };
 
