@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { useRouter } from 'next/router';
 import { AppDispatch, RootState } from '@/app/lib/store';
 import { login } from '@/app/lib/features/auth/authSlice';
+import { Button } from '../utilities/UILibrary/components/Button';
+import { LoginContainer } from './login.styles';
 
 const Login = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -23,25 +25,29 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login formulario</h2>
+    <LoginContainer>
+      <h2>Inicia sesión</h2>
+      <p>¿No tienes cuenta?</p>
+      <h3>CONTACTO</h3>
       {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
+        <p>Correo electrónico</p>
         <input
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
+        <p>Contraseña</p>
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">Login</button>
+        <Button type="submit">Ingresar</Button>
       </form>
-    </div>
+    </LoginContainer>
   );
 };
 
