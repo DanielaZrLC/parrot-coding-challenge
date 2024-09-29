@@ -1,0 +1,27 @@
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+categories:
+  - title: "🚀 Features"
+    labels:
+      - "feature"
+  - title: "🐛 Bug Fixes"
+    labels:
+      - "fix"
+  - title: "🧰 Maintenance"
+    labels:
+      - "chore"
+      - "test"
+      - "documentation"
+version-resolver:
+  minor:
+    labels:
+      - "feature"
+  patch:
+    labels:
+      - "fix"
+      - "chore"
+      - "test"
+  default: patch
+template: |
+  ## Changes
+  $CHANGES

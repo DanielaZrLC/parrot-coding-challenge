@@ -1,18 +1,54 @@
-name: CI
+# name: CI
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Install dependencies
+#         run: npm install
+#       - name: Build the project
+#         run: npm run build
+#       - name: Run tests
+#         run: npm run test
+name: Build and Test
 
 on:
-  push:
+  pull_request:
     branches:
       - main
+      - main-dev
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Install dependencies
         run: npm install
-      - name: Build the project
-        run: npm run build
+
       - name: Run tests
         run: npm run test
+
+      - name: Build project
+        run: npm run build
+
+      - name: Verify build
+        run: |
+          if [ -d ".next" ]; then
+            echo "Build succeeded"
+          else
+            echo "Build failed"
+            exit 1
+          fi
+
+      - name: Complete
+        run: echo "Build and test completed successfully"
