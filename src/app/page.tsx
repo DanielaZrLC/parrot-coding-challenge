@@ -10,7 +10,6 @@ export default function Home() {
       <Navbar />
       <main>
         <div className={styles['main-container']}>
-          <h1>Parrot: Software para Restaurantes en México</h1>
           <Login />
         </div>
       </main>

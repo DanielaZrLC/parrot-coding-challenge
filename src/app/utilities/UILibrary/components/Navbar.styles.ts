@@ -13,14 +13,8 @@ export const NavbarContainer = styled.footer`
   padding: 1rem 2rem;
   width: 100vw;
 
-  @media (min-width: ${breakpoints.mobile}) {
-    padding: 2.5rem 1.5rem;
-  }
-  @media (min-width: ${breakpoints.tablet}) {
-    width: 100vw;
-  }
-  @media (min-width: ${breakpoints.desktop}) {
-    padding: 1rem 2rem;
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 2.5rem 0;
   }
 `;
 
@@ -35,7 +29,7 @@ export const NavLinks = styled.ul`
     a {
       color: ${colors.text.default};
       text-decoration: none;
-      font-size: ${uIFontSize.small};
+      font-size: ${uIFontSize.medium};
       font-weight: 500;
     }
 
@@ -47,6 +41,13 @@ export const NavLinks = styled.ul`
     span {
       font-weight: bold;
       font-size: ${uIFontSize.small};
+    }
+  }
+  @media (max-width: ${breakpoints.mobileLarge}) {
+    div {
+      a {
+        font-size: ${uIFontSize.small};
+      }
     }
   }
 `;

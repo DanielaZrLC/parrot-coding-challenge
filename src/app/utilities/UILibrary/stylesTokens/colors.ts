@@ -20,6 +20,7 @@ export const red = {
 export const gray = {
   default: '#F7F6FC',
   secondary: '#464646',
+  light: '#ADADAD',
 };
 
 export const colors = {
@@ -35,6 +36,7 @@ export const colors = {
     white: white.pearl,
     black: black.default,
     link: red.default,
+    light: gray.light,
   },
   background: {
     footer: white.default,
