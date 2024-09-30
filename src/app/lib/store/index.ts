@@ -1,14 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
-import { authMiddleware } from '../../middlewares/auth/authMiddleware';
+import storeReducer from '../features/stores/storeSlice';
+// import { authMiddleware } from '../../middlewares/auth/authMiddleware';
+import { authFlowMiddleware } from '@/app/middlewares/fetch/authFlowMiddleware';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       auth: authReducer,
+      store: storeReducer,
     },
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(authMiddleware),
+      getDefaultMiddleware().concat(authFlowMiddleware),
   });
 };
 

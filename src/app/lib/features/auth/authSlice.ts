@@ -1,5 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
+import {
+  checkHealthAPI,
+  generateTokenAPI,
+} from '@/app/middlewares/auth/authMiddleware';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -12,16 +16,36 @@ interface AuthState {
 const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
-  access_token: null,
-  refresh_token: null,
+  access_token: '',
+  refresh_token: '',
   error: null,
 };
 
+// export const loginSlice = createAsyncThunk<
+//   { username: string },  // Thunk only returns the username
+//   { username: string; password: string }  // Thunk input is username and password
+// >('auth/login', async (credentials) => {
+//   return { username: credentials.username };  // Only return username here
+// });
+
 export const loginSlice = createAsyncThunk<
-  { username: string },
-  { username: string; password: string }
->('auth/login', async (credentials) => {
-  return { username: credentials.username };
+  { username: string; access_token: string; refresh_token: string }, // Expected return payload
+  { username: string; password: string } // Input argument type
+>('auth/login', async (credentials, { rejectWithValue }) => {
+  try {
+    // Step 1: Check API health
+    const healthResponse = await checkHealthAPI();
+    if (healthResponse.status !== 200) {
+      throw new Error('API health check failed');
+    }
+
+    // Step 2: Send credentials to generate tokens
+    const { access_token, refresh_token } = await generateTokenAPI(credentials);
+
+    return { username: credentials.username, access_token, refresh_token };
+  } catch (error) {
+    return rejectWithValue((error as Error).message);
+  }
 });
 
 //Auth slice
@@ -42,6 +66,10 @@ export const authSlice = createSlice({
       .addCase(loginSlice.fulfilled, (state, action) => {
         state.isAuthenticated = true;
         state.user = action.payload.username;
+        state.access_token = action.payload.access_token;
+        state.refresh_token = action.payload.refresh_token;
+        console.log('Access Token:', action.payload.access_token);
+        console.log('Refresh Token:', action.payload.refresh_token);
         state.error = null;
       })
       .addCase(loginSlice.rejected, (state, action) => {
