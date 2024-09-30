@@ -14,6 +14,7 @@ import {
   Header,
   ProductsSection,
 } from './dashboard.styles';
+import Image from 'next/image';
 
 const Dashboard = () => {
   const store = useSelector(selectStore);
@@ -54,7 +55,7 @@ const Dashboard = () => {
         <ul>
           {filteredProducts.map((product) => (
             <li key={product.uuid}>
-              <img src={product.imageUrl} alt={product.name} />
+              <Image src={product.imageUrl} alt={product.name} />
               <h4>{product.name}</h4>
               <p>{product.description}</p>
               <p>${product.price}</p>
