@@ -4,48 +4,44 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/app/lib/store';
 import {
   loginSlice,
-  selectAuthError,
   selectIsAuthenticated,
 } from '@/app/lib/features/auth/authSlice';
-import { Button } from '../utilities/UILibrary/components/Button';
-import Router from 'next/router';
+import { Button } from '@/app/utilities/UILibrary/components/Button';
+// import Router, { useRouter } from 'next/router'
 import {
+  HomeContainer,
   LoginContainer,
   LoginFormWrapper,
   MainSection,
   TextHeader,
 } from './login.styles';
-import { Form, Input, Modal } from 'antd';
-import Loader from '../utilities/UILibrary/components/Loader';
+import { Form, Input } from 'antd';
+import Loader from '@/app/utilities/UILibrary/components/Loader';
+import { fetchStoreAndProducts } from '@/app/lib/features/stores/storeSlice';
 
 const Login = () => {
   const dispatch: AppDispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const error = useSelector(selectAuthError);
+  // const error = useSelector(selectAuthError);
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  console.log(isAuthenticated, 'isAuthenticated');
+  // const router = useRouter()
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onFinish = async (values: { username: string; password: string }) => {
+    console.log('zorimbos');
     setLoading(true);
-    await dispatch(loginSlice({ username, password }));
+    await dispatch(loginSlice({ username, password })).then(() => {
+      dispatch(fetchStoreAndProducts());
+    });
   };
-
-  useEffect(() => {
-    if (error) {
-      Modal.error({
-        title: 'Error',
-        content: error,
-      });
-    }
-  }, [error]);
-
+  console.log(isAuthenticated);
   useEffect(() => {
     if (isAuthenticated) {
-      setLoading(false); // Stop loading spinner after authentication
-      Router.push('/dashboard'); // Redirect after successful authentication
+      setLoading(false);
+      console.log('User authenticated, redirecting to dashboard...');
+      // Router.push('/dashboard');
     }
   }, [isAuthenticated]);
 
@@ -55,7 +51,7 @@ const Login = () => {
   };
 
   return (
-    <>
+    <HomeContainer>
       {loading ? (
         <Loader />
       ) : (
@@ -117,7 +113,7 @@ const Login = () => {
           </LoginContainer>
         </MainSection>
       )}
-    </>
+    </HomeContainer>
   );
 };
 

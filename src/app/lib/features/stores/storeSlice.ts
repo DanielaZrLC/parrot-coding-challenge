@@ -1,5 +1,10 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
+import {
+  fetchItemsAPI,
+  getStoreIdAPI,
+  testTokenAPI,
+} from '@/app/middlewares/fetch/authFlowMiddleware';
 
 interface Store {
   uuid: string;
@@ -35,6 +40,40 @@ const initialState: StoreState = {
   products: [],
   error: null,
 };
+
+// Thunk to handle the post-login API calls
+export const fetchStoreAndProducts = createAsyncThunk<
+  { store: Store; products: Product[] },
+  void,
+  { state: RootState } // Access to the global state
+>('store/fetchStoreAndProducts', async (_, { getState, rejectWithValue }) => {
+  try {
+    const accessToken = getState().auth.access_token; // Get token from auth state
+    if (!accessToken) {
+      throw new Error('Access token is missing');
+    }
+
+    // Step 1: Validate the token
+    const validateTokenResponse = await testTokenAPI(accessToken);
+    if (validateTokenResponse.data.status !== 'ok') {
+      throw new Error('Token validation failed');
+    }
+
+    // Step 2: Fetch the user's store information
+    const storeResponse = await getStoreIdAPI(accessToken);
+    const storeData = storeResponse.data.result;
+    const storeId = storeData.stores[0].uuid; // Assuming you need the first store's ID
+
+    // Step 3: Fetch products for the store
+    const productsResponse = await fetchItemsAPI(storeId, accessToken);
+    const productsData = productsResponse.data.results;
+    console.log(productsData, productsResponse, 'storeSlice');
+    // Return both store and products
+    return { store: storeData, products: productsData };
+  } catch (error) {
+    return rejectWithValue((error as Error).message);
+  }
+});
 
 export const storeSlice = createSlice({
   name: 'store',

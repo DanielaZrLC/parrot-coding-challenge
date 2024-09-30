@@ -1,8 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 import storeReducer from '../features/stores/storeSlice';
-// import { authMiddleware } from '../../middlewares/auth/authMiddleware';
-import { authFlowMiddleware } from '@/app/middlewares/fetch/authFlowMiddleware';
 
 export const makeStore = () => {
   return configureStore({
@@ -10,8 +8,8 @@ export const makeStore = () => {
       auth: authReducer,
       store: storeReducer,
     },
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(authFlowMiddleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+    devTools: process.env.NODE_ENV !== 'production',
   });
 };
 
