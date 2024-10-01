@@ -1,7 +1,8 @@
 import { colors } from '@/app/utilities/UILibrary/stylesTokens/colors';
 import styled from 'styled-components';
-import { uIFontSize } from '../utilities/UILibrary/stylesTokens/typography';
-import { breakpoints } from '../utilities/UILibrary/stylesTokens/breakpoints';
+
+import { breakpoints } from '@/app/utilities/UILibrary/stylesTokens/breakpoints';
+import { uIFontSize } from '@/app/utilities/UILibrary/stylesTokens/typography';
 
 export const MainSection = styled.footer`
   display: flex;
@@ -35,6 +36,15 @@ export const TextHeader = styled.footer`
       width: 90vw;
     }
   }
+`;
+
+export const HomeContainer = styled.div`
+  display: flex;
+  height: 65vh;
+  background-color: #ef4c4d;
+  background-image: linear-gradient(180deg, #ef4c4d 40%, #f7f6fc 100%);
+  align-items: center;
+  justify-content: space-between;
 `;
 
 export const LoginContainer = styled.footer`

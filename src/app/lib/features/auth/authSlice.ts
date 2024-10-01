@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
+import {
+  checkHealthAPI,
+  generateTokenAPI,
+} from '@/app/middlewares/auth/authMiddleware';
+// import { fetchStoreAndProducts } from '../stores/storeSlice';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -18,10 +23,22 @@ const initialState: AuthState = {
 };
 
 export const loginSlice = createAsyncThunk<
-  { username: string },
+  { username: string; access_token: string; refresh_token: string },
   { username: string; password: string }
->('auth/login', async (credentials) => {
-  return { username: credentials.username };
+>('auth/login', async (credentials, { rejectWithValue }) => {
+  try {
+    // Step 1: Check API health
+    const healthResponse = await checkHealthAPI();
+    if (healthResponse.status !== 200) {
+      throw new Error('API health check failed');
+    }
+
+    // Step 2: Send credentials to generate tokens
+    const { access_token, refresh_token } = await generateTokenAPI(credentials);
+    return { username: credentials.username, access_token, refresh_token };
+  } catch (error) {
+    return rejectWithValue((error as Error).message);
+  }
 });
 
 //Auth slice
@@ -40,8 +57,13 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginSlice.fulfilled, (state, action) => {
+        console.log('Action Payload:', action.payload);
         state.isAuthenticated = true;
         state.user = action.payload.username;
+        state.access_token = action.payload.access_token;
+        state.refresh_token = action.payload.refresh_token;
+        console.log('Access Token:', action.payload.access_token);
+        console.log('Refresh Token:', action.payload.refresh_token);
         state.error = null;
       })
       .addCase(loginSlice.rejected, (state, action) => {
