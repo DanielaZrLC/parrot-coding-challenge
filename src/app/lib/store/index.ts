@@ -6,7 +6,7 @@ export const makeStore = () => {
   return configureStore({
     reducer: {
       auth: authReducer,
-      store: storeReducer,
+      stores: storeReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     devTools: process.env.NODE_ENV !== 'production',

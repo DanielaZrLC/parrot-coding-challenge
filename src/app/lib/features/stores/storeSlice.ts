@@ -30,13 +30,13 @@ export interface Product {
 }
 
 interface StoreState {
-  store: Store | null;
+  stores: Store | null;
   products: Product[];
   error: string | null;
 }
 
 const initialState: StoreState = {
-  store: null,
+  stores: null,
   products: [],
   error: null,
 };
@@ -62,12 +62,13 @@ export const fetchStoreAndProducts = createAsyncThunk<
     // Step 2: Fetch the user's store information
     const storeResponse = await getStoreIdAPI(accessToken);
     const storeData = storeResponse.data.result;
-    const storeId = storeData.stores[0].uuid; // Assuming you need the first store's ID
+    const storeId = storeData.stores[0].uuid;
+    console.log(storeId, 'storeId');
 
     // Step 3: Fetch products for the store
     const productsResponse = await fetchItemsAPI(storeId, accessToken);
     const productsData = productsResponse.data.results;
-    console.log(productsData, productsResponse, 'storeSlice');
+    console.log(productsData, 'storeSlice');
     // Return both store and products
     return { store: storeData, products: productsData };
   } catch (error) {
@@ -75,12 +76,12 @@ export const fetchStoreAndProducts = createAsyncThunk<
   }
 });
 
-export const storeSlice = createSlice({
-  name: 'store',
+export const storesSlice = createSlice({
+  name: 'stores',
   initialState,
   reducers: {
     fetchStoreSuccess: (state, action: PayloadAction<Store>) => {
-      state.store = action.payload;
+      state.stores = action.payload;
       state.error = null;
     },
     fetchProductsSuccess: (state, action: PayloadAction<Product[]>) => {
@@ -91,12 +92,27 @@ export const storeSlice = createSlice({
       state.error = action.payload;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchStoreAndProducts.pending, (state) => {
+        state.error = null; // Optionally set loading state if needed
+      })
+      .addCase(fetchStoreAndProducts.fulfilled, (state, action) => {
+        const { store, products } = action.payload;
+        state.stores = store;
+        state.products = products;
+        state.error = null;
+      })
+      .addCase(fetchStoreAndProducts.rejected, (state, action) => {
+        state.error = action.payload as string;
+      });
+  },
 });
 
 export const { fetchStoreSuccess, fetchProductsSuccess, fetchFailure } =
-  storeSlice.actions;
+  storesSlice.actions;
 
-export const selectStore = (state: RootState) => state.store.store;
-export const selectProducts = (state: RootState) => state.store.products;
+export const selectStore = (state: RootState) => state.stores.stores;
+export const selectProducts = (state: RootState) => state.stores.products;
 
-export default storeSlice.reducer;
+export default storesSlice.reducer;

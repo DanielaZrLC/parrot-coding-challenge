@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 import React from 'react';
 import StoreProvider from './StoreProvider';
+import Navbar from './utilities/UILibrary/components/Navbar/Nabvar';
+import Footer from './utilities/UILibrary/components/Footer/Footer';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -16,7 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <StoreProvider>{children}</StoreProvider>
+        <StoreProvider>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </StoreProvider>
       </body>
     </html>
   );

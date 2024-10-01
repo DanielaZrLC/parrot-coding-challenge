@@ -7,7 +7,7 @@ import {
   selectIsAuthenticated,
 } from '@/app/lib/features/auth/authSlice';
 import { Button } from '@/app/utilities/UILibrary/components/Button';
-// import Router, { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation';
 import {
   HomeContainer,
   LoginContainer,
@@ -24,6 +24,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   // const error = useSelector(selectAuthError);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   // const router = useRouter()
@@ -41,9 +42,9 @@ const Login = () => {
     if (isAuthenticated) {
       setLoading(false);
       console.log('User authenticated, redirecting to dashboard...');
-      // Router.push('/dashboard');
+      router.push('/dashboard');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, router]);
 
   type FieldType = {
     username?: string;
