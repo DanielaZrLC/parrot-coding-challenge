@@ -1,107 +1,112 @@
 import { colors } from '@/app/utilities/UILibrary/stylesTokens/colors';
 import styled from 'styled-components';
-
-// import { breakpoints } from '@/app/utilities/UILibrary/stylesTokens/breakpoints';
+import { breakpoints } from '@/app/utilities/UILibrary/stylesTokens/breakpoints';
 import { uIFontSize } from '@/app/utilities/UILibrary/stylesTokens/typography';
 
-// Main container
 export const DashboardMain = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 20px 0;
   gap: 20px;
+  background-color: ${colors.gray.default};
 `;
 
-// Header styling (green area)
 export const Header = styled.header`
-  background-color: ${colors.text.description}; /* Light green */
   width: 100%;
-  padding: 20px 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
   text-align: center;
-  h1 {
-    font-size: 2rem;
-    color: ${colors.text.white};
+  h4 {
+    font-size: ${uIFontSize.small};
+    color: ${colors.text.link};
   }
 `;
 
-// Categories section styling (pink area)
 export const CategoriesSection = styled.section`
-  /* background-color: #f8d7f4; */
   width: 100%;
-  padding: 20px;
+  padding: 1rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   h3 {
-    width: 100%;
     text-align: center;
     margin-bottom: 3rem;
+    font-size: ${uIFontSize.xxLarge};
+    width: 100%;
+  }
+  p {
+    color: ${colors.gray.light};
+    font-size: ${uIFontSize.small};
   }
 
-  ul {
-    display: flex;
-    gap: 10px;
-    list-style: none;
-    padding: 0;
-  }
-
-  li {
-    padding: 3rem 1.5rem;
-    background-color: ${colors.status.error};
-    border-radius: 10px;
-    cursor: pointer;
-    text-align: center;
-    border: 2px solid ${colors.white.pearl};
-    transition: all 0.3s ease;
-    color: ${colors.text.white};
-    font-size: ${uIFontSize.paragraph};
-
-    &.active {
-      background-color: #f44336; /* Red for active category */
-      color: #fff;
-    }
-
-    &:hover {
-      border: 2px solid #f44336;
-    }
-  }
   .cards-section {
     display: flex;
+    justify-content: space-evenly;
     flex-wrap: wrap;
     width: 90%;
-    justify-content: space-evenly;
+    p {
+      color: ${colors.text.white};
+      background-color: ${colors.text.link};
+      padding: 1rem;
+      border-radius: 15px;
+      font-size: small;
+      outline-offset: 2px;
+      outline: 1px dashed ${colors.blue.secondary};
+      &.active {
+        background-color: ${colors.blue.secondary};
+        color: ${colors.text.white};
+      }
+      &:hover {
+        border: 2px solid #f44336;
+      }
+    }
   }
 `;
 
-// Products section styling (blue area)
 export const ProductsSection = styled.section`
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  /* background-color: #d0e7f9; */
   width: 100%;
   padding: 20px;
-  img {
-    border-radius: 8px;
-    margin-bottom: 10px;
+  .ant-switch.ant-switch-checked {
+    background: ${colors.text.link};
   }
-  h2 {
-    color: ${colors.text.link};
-  }
+  .card-style {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+    margin: 2rem;
+    justify-content: center;
+    text-align: center;
+    img {
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    h2,
+    h4,
+    p,
+    h5 {
+      text-align: center;
+    }
+    p {
+      font-size: ${uIFontSize.xSmall};
+      color: #333;
+    }
+    h2 {
+      color: ${colors.text.link};
+    }
 
-  h4 {
-    font-size: ${uIFontSize.small};
-    margin-bottom: 10px;
-    color: ${colors.text.default};
-  }
+    .toggle {
+      margin-top: 10px;
+    }
 
-  p {
-    font-size: ${uIFontSize.xSmall};
-    color: #333;
-  }
-
-  .toggle {
-    margin-top: 10px;
+    @media (max-width: ${breakpoints.tablet}) {
+      width: 90%;
+      margin: 1rem 0;
+    }
   }
 `;

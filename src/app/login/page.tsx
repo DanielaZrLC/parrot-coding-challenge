@@ -31,7 +31,6 @@ const Login = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onFinish = async (values: { username: string; password: string }) => {
-    console.log('zorimbos');
     setLoading(true);
     await dispatch(loginSlice({ username, password })).then(() => {
       dispatch(fetchStoreAndProducts());

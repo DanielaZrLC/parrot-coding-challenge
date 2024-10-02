@@ -3,13 +3,16 @@
 import React from 'react';
 import Link from 'next/link';
 import { useAppSelector } from '@/app/lib/hooks';
-import { selectIsAuthenticated } from '@/app/lib/features/auth/authSlice';
+import {
+  selectIsAuthenticated,
+  selectUser,
+} from '@/app/lib/features/auth/authSlice';
 import { NavbarContainer, NavLinks } from './Navbar.styles';
 import Image from 'next/image';
 
 const Navbar = () => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  //const user = useAppSelector((state) => state.auth.user);
+  const username = useAppSelector(selectUser);
 
   return (
     <NavbarContainer>
@@ -20,10 +23,7 @@ const Navbar = () => {
         {isAuthenticated ? (
           <div>
             <p>
-              <span>Bienvenido,</span>
-            </p>
-            <p>
-              <Link href="/checkout">Cerrar sesión</Link>
+              <span>Bienvenido {username}</span>
             </p>
           </div>
         ) : (
