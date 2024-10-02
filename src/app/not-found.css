@@ -1,0 +1,38 @@
+.notFound-container {
+    width: 100%;
+    height: 70vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .notFound-container h1{
+    font-size: 2.8rem;
+    padding: 0 5%;
+    color: #47455F;
+  }
+
+  .notFound-container p{
+    font-size: 1rem;
+    color: #ADADAD;
+  }
+  
+  .notFound-section{
+    width: 90%;
+    background-size: cover;
+    padding: 1% 0;
+    text-align: center;
+    height: 30vh;
+  }
+  
+  .ant-btn-variant-outlined {
+    border-color: #EF4C4D;
+  }
+  .ant-btn >span {
+    color: #EF4C4D
+  }
+
+  .ant-btn-variant-outlined:not(:disabled):not(.ant-btn-disabled):hover{
+    color: #EF4C4D
+  }

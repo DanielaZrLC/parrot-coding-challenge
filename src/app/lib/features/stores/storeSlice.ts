@@ -4,6 +4,7 @@ import {
   fetchItemsAPI,
   getStoreIdAPI,
   testTokenAPI,
+  updateItemsAPI,
 } from '@/app/middlewares/fetch/authFlowMiddleware';
 
 interface Store {
@@ -76,6 +77,31 @@ export const fetchStoreAndProducts = createAsyncThunk<
   }
 });
 
+// Add the new thunk in your storesSlice
+export const updateProductAvailability = createAsyncThunk<
+  Product,
+  { productId: string; availability: string },
+  { state: RootState }
+>(
+  'store/updateProductAvailability',
+  async ({ productId, availability }, { getState, rejectWithValue }) => {
+    try {
+      const accessToken = getState().auth.access_token;
+      if (!accessToken) {
+        throw new Error('Access token is missing');
+      }
+      const response = await updateItemsAPI(
+        productId,
+        availability,
+        accessToken,
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  },
+);
+
 export const storesSlice = createSlice({
   name: 'stores',
   initialState,
@@ -99,9 +125,20 @@ export const storesSlice = createSlice({
       })
       .addCase(fetchStoreAndProducts.fulfilled, (state, action) => {
         const { store, products } = action.payload;
+        console.log(store);
         state.stores = store;
         state.products = products;
         state.error = null;
+      })
+      .addCase(updateProductAvailability.fulfilled, (state, action) => {
+        const updatedProduct = action.payload;
+        // Find the index of the updated product and replace it in the state
+        const index = state.products.findIndex(
+          (product) => product.uuid === updatedProduct.uuid,
+        );
+        if (index !== -1) {
+          state.products[index] = updatedProduct;
+        }
       })
       .addCase(fetchStoreAndProducts.rejected, (state, action) => {
         state.error = action.payload as string;

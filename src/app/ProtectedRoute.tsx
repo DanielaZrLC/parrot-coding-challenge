@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { selectIsAuthenticated } from './authSlice';
+import { useRouter } from 'next/navigation';
+import { selectIsAuthenticated } from '../app/lib/features/auth/authSlice';
 import { Spin } from 'antd';
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -21,7 +21,7 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     }
   }, [isAuthenticated, router]);
 
-  if (loading) return <Spin tip="Checking authentication..." />;
+  if (loading) return <Spin />;
 
   return <>{isAuthenticated ? children : null}</>;
 };
