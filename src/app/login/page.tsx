@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/app/lib/store';
 import {
-  loginSlice,
+  authenticationRequest,
   selectIsAuthenticated,
 } from '@/app/lib/features/auth/authSlice';
 import { Button } from '@/app/utilities/UILibrary/components/Button';
@@ -27,20 +27,18 @@ const Login = () => {
   const router = useRouter();
   // const error = useSelector(selectAuthError);
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  // const router = useRouter()
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onFinish = async (values: { username: string; password: string }) => {
     setLoading(true);
-    await dispatch(loginSlice({ username, password })).then(() => {
+    await dispatch(authenticationRequest({ username, password })).then(() => {
       dispatch(fetchStoreAndProducts());
     });
   };
-  console.log(isAuthenticated);
+
   useEffect(() => {
     if (isAuthenticated) {
       setLoading(false);
-      console.log('User authenticated, redirecting to dashboard...');
       router.push('/dashboard');
     }
   }, [isAuthenticated, router]);

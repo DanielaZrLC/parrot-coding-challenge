@@ -34,9 +34,11 @@ interface StoreState {
   stores: Store | null;
   products: Product[];
   error: string | null;
+  hola: string;
 }
 
 const initialState: StoreState = {
+  hola: '',
   stores: null,
   products: [],
   error: null,
@@ -49,7 +51,7 @@ export const fetchStoreAndProducts = createAsyncThunk<
   { state: RootState } // Access to the global state
 >('store/fetchStoreAndProducts', async (_, { getState, rejectWithValue }) => {
   try {
-    const accessToken = getState().auth.access_token; // Get token from auth state
+    const accessToken = getState().auth.token.access;
     if (!accessToken) {
       throw new Error('Access token is missing');
     }
@@ -64,12 +66,11 @@ export const fetchStoreAndProducts = createAsyncThunk<
     const storeResponse = await getStoreIdAPI(accessToken);
     const storeData = storeResponse.data.result;
     const storeId = storeData.stores[0].uuid;
-    console.log(storeId, 'storeId');
 
     // Step 3: Fetch products for the store
     const productsResponse = await fetchItemsAPI(storeId, accessToken);
     const productsData = productsResponse.data.results;
-    console.log(productsData, 'storeSlice');
+
     // Return both store and products
     return { store: storeData, products: productsData };
   } catch (error) {
@@ -86,7 +87,7 @@ export const updateProductAvailability = createAsyncThunk<
   'store/updateProductAvailability',
   async ({ productId, availability }, { getState, rejectWithValue }) => {
     try {
-      const accessToken = getState().auth.access_token;
+      const accessToken = getState().auth.token.access;
       if (!accessToken) {
         throw new Error('Access token is missing');
       }
@@ -121,18 +122,16 @@ export const storesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchStoreAndProducts.pending, (state) => {
-        state.error = null; // Optionally set loading state if needed
+        state.error = null;
       })
       .addCase(fetchStoreAndProducts.fulfilled, (state, action) => {
         const { store, products } = action.payload;
-        console.log(store);
         state.stores = store;
         state.products = products;
         state.error = null;
       })
       .addCase(updateProductAvailability.fulfilled, (state, action) => {
         const updatedProduct = action.payload;
-        // Find the index of the updated product and replace it in the state
         const index = state.products.findIndex(
           (product) => product.uuid === updatedProduct.uuid,
         );
