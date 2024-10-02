@@ -21,15 +21,12 @@ import Card from 'antd/es/card/Card';
 import { useRouter } from 'next/navigation';
 import { logout } from '../lib/features/auth/authSlice';
 import { LogoutOutlined } from '@ant-design/icons';
-import { tokenSelector } from '../lib/features/auth/authSlice';
 import { useAppDispatch } from '../lib/hooks';
 
 const Dashboard = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const router = useRouter();
   const products = useSelector(selectProducts);
-  const token = useSelector(tokenSelector);
-  console.log({ token });
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [loadingProduct, setLoadingProduct] = useState<string | null>(null);
 
@@ -44,8 +41,8 @@ const Dashboard = () => {
     : [];
 
   const handleLogout = async () => {
-    dispatch(logout());
-    await persistor.purge();
+    await persistor.purge(); // Clear persisted state
+    dispatch(logout()); // Reset in-memory Redux state
     router.push('/');
   };
 

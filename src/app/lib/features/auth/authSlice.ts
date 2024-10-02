@@ -5,14 +5,14 @@ import {
   generateTokenAPI,
   refreshTokenAPI,
 } from '@/app/middlewares/auth/authMiddleware';
-// import { fetchStoreAndProducts } from '../stores/storeSlice';
+import { setAccessToken, setRefreshToken } from '@/app/utils/tokenUtils';
 
 interface AuthState {
   isAuthenticated: boolean;
   user: string | null;
-  access_token: string | null;
-  refresh_token: string | null;
   error: string | null;
+  refreshing: boolean;
+  refreshCount: number;
   token: {
     access: string | null;
     refresh: string | null;
@@ -24,9 +24,9 @@ interface AuthState {
 const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
-  access_token: null,
-  refresh_token: null,
   error: null,
+  refreshing: false,
+  refreshCount: 0,
   token: {
     access: null,
     refresh: null,
@@ -40,7 +40,6 @@ export const authenticationRequest = createAsyncThunk<
     username: string;
     access_token: string;
     refresh_token: string;
-    accessTokenExpiresAt: number;
   },
   { username: string; password: string }
 >('auth/login', async (credentials, { rejectWithValue }) => {
@@ -53,12 +52,10 @@ export const authenticationRequest = createAsyncThunk<
 
     // Step 2: Send credentials to generate tokens
     const { access_token, refresh_token } = await generateTokenAPI(credentials);
-    const accessTokenExpiresAt = Date.now() + 25 * 60 * 1000;
     return {
       username: credentials.username,
       access_token,
       refresh_token,
-      accessTokenExpiresAt,
     };
   } catch (error) {
     return rejectWithValue((error as Error).message);
@@ -67,16 +64,28 @@ export const authenticationRequest = createAsyncThunk<
 
 export const refreshToken = createAsyncThunk(
   'auth/refreshToken',
-  async (_, { getState }) => {
+  async (_, { getState, rejectWithValue }) => {
     const state = getState() as RootState;
     const refreshToken = state.auth.token.refresh;
-    if (refreshToken) {
-      // Call the API to refresh the token
-      const { newAccessToken, newRefreshToken } =
-        await refreshTokenAPI(refreshToken);
-      return { newAccessToken, newRefreshToken };
+    const refreshCount = state.auth.refreshCount;
+
+    // Check if the refresh count has reached the limit
+    if (refreshCount >= 2) {
+      return rejectWithValue('Maximum refresh attempts exceeded');
     }
-    throw new Error('No refresh token available');
+
+    if (refreshToken) {
+      try {
+        const { newAccessToken, newRefreshToken } =
+          await refreshTokenAPI(refreshToken);
+        return { newAccessToken, newRefreshToken };
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        return rejectWithValue('Token refresh failed');
+      }
+    }
+
+    return rejectWithValue('No refresh token available');
   },
 );
 
@@ -88,23 +97,26 @@ export const authSlice = createSlice({
     logout: (state) => {
       state.isAuthenticated = false;
       state.user = null;
-      state.access_token = null;
-      state.refresh_token = null;
+      state.token.access = null;
+      state.token.refresh = null;
+      state.token.createdAt = null;
+      state.token.updatedAt = null;
       state.error = null;
+      state.refreshing = false;
+      state.refreshCount = 0;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(authenticationRequest.fulfilled, (state, action) => {
-        console.log({ state });
         state.isAuthenticated = true;
         state.user = action.payload.username;
-        state.access_token = action.payload.access_token;
-        state.refresh_token = action.payload.refresh_token;
         state.token.access = action.payload.access_token;
         state.token.refresh = action.payload.refresh_token;
         state.token.createdAt = Math.floor(new Date().getTime() / 1000);
         state.token.updatedAt = Math.floor(new Date().getTime() / 1000);
+        setAccessToken(action.payload.access_token);
+        setRefreshToken(action.payload.refresh_token);
         state.error = null;
       })
       .addCase(authenticationRequest.rejected, (state, action) => {
@@ -115,11 +127,19 @@ export const authSlice = createSlice({
         state.token.access = action.payload.newAccessToken;
         state.token.refresh = action.payload.newRefreshToken;
         state.token.updatedAt = Math.floor(new Date().getTime() / 1000);
+        setAccessToken(action.payload.newAccessToken);
+        setRefreshToken(action.payload.newRefreshToken);
+        state.refreshing = false;
+        state.refreshCount += 1;
       })
       .addCase(refreshToken.rejected, (state) => {
         state.isAuthenticated = false;
         state.token.access = null;
         state.token.refresh = null;
+        state.refreshing = false;
+      })
+      .addCase(refreshToken.pending, (state) => {
+        state.refreshing = true;
       });
   },
 });

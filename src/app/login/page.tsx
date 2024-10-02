@@ -27,7 +27,6 @@ const Login = () => {
   const router = useRouter();
   // const error = useSelector(selectAuthError);
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  // const router = useRouter()
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onFinish = async (values: { username: string; password: string }) => {
@@ -36,11 +35,10 @@ const Login = () => {
       dispatch(fetchStoreAndProducts());
     });
   };
-  console.log(isAuthenticated);
+
   useEffect(() => {
     if (isAuthenticated) {
       setLoading(false);
-      console.log('User authenticated, redirecting to dashboard...');
       router.push('/dashboard');
     }
   }, [isAuthenticated, router]);

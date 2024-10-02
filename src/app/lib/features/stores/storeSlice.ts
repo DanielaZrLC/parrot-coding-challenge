@@ -51,7 +51,7 @@ export const fetchStoreAndProducts = createAsyncThunk<
   { state: RootState } // Access to the global state
 >('store/fetchStoreAndProducts', async (_, { getState, rejectWithValue }) => {
   try {
-    const accessToken = getState().auth.access_token;
+    const accessToken = getState().auth.token.access;
     if (!accessToken) {
       throw new Error('Access token is missing');
     }
@@ -87,7 +87,7 @@ export const updateProductAvailability = createAsyncThunk<
   'store/updateProductAvailability',
   async ({ productId, availability }, { getState, rejectWithValue }) => {
     try {
-      const accessToken = getState().auth.access_token;
+      const accessToken = getState().auth.token.access;
       if (!accessToken) {
         throw new Error('Access token is missing');
       }

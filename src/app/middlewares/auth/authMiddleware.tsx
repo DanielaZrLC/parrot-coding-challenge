@@ -8,11 +8,10 @@ const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 // Helper function to check API health
 export const checkHealthAPI = async (): Promise<any> => {
   try {
-    console.log('dsdsdds');
     const response = await axios.get(`${baseUrl}/api/health`);
     return response;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error: unknown) {
-    console.log(error);
     throw new Error('API health check failed');
   }
 };
@@ -33,17 +32,25 @@ export const generateTokenAPI = async (credentials: {
     setRefreshToken(refresh_token);
 
     return { access_token, refresh_token };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error: unknown) {
-    console.log(error);
     throw new Error('Failed to generate tokens');
   }
 };
 
 export const refreshTokenAPI = async (refresh_token: string) => {
-  const response = await axios.post(`${baseUrl}/api/auth/token/refresh`, {
-    refresh_token,
-  });
-  return response.data;
+  try {
+    const response = await axios.post(`${baseUrl}/api/auth/token/refresh`, {
+      refresh: refresh_token,
+    });
+
+    // Destructure the access and refresh tokens from the API response
+    const { access: newAccessToken, refresh: newRefreshToken } = response.data;
+    return { newAccessToken, newRefreshToken };
+  } catch (error: unknown) {
+    console.error('API error during token refresh:', error);
+    throw error;
+  }
 };
 
 //         } catch (error: unknown) {

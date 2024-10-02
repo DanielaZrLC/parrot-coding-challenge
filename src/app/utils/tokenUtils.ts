@@ -23,7 +23,12 @@ interface Token {
 
 export const checkTokenStatus = (token: Token) => {
   const now = Math.floor(new Date().getTime() / 1000);
+  // Calculate time passed since last token update
   const timePassed = now - (token.updatedAt ?? 0);
+  // Ensure the token has an `updatedAt` time, otherwise return 'logout'
+  if (!token.updatedAt) {
+    return 'logout';
+  }
 
   if (timePassed > 3300) {
     return 'logout';
