@@ -1,7 +1,7 @@
 'use client';
 import { ProtectedRoute } from '@/app/ProtectedRoute';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   selectProducts,
   fetchStoreAndProducts,
@@ -21,11 +21,15 @@ import Card from 'antd/es/card/Card';
 import { useRouter } from 'next/navigation';
 import { logout } from '../lib/features/auth/authSlice';
 import { LogoutOutlined } from '@ant-design/icons';
+import { tokenSelector } from '../lib/features/auth/authSlice';
+import { useAppDispatch } from '../lib/hooks';
 
 const Dashboard = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useAppDispatch();
   const router = useRouter();
   const products = useSelector(selectProducts);
+  const token = useSelector(tokenSelector);
+  console.log({ token });
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [loadingProduct, setLoadingProduct] = useState<string | null>(null);
 
@@ -48,12 +52,14 @@ const Dashboard = () => {
   const handleSwitchChange = async (product: Product, checked: boolean) => {
     const newAvailability = checked ? 'AVAILABLE' : 'UNAVAILABLE';
     setLoadingProduct(product.uuid);
+
     const resultAction = await dispatch(
       updateProductAvailability({
         productId: product.uuid,
         availability: newAvailability,
       }),
     );
+
     if (updateProductAvailability.fulfilled.match(resultAction)) {
       await dispatch(fetchStoreAndProducts());
       setLoadingProduct(null);

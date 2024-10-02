@@ -1,9 +1,10 @@
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import { configureStore } from '@reduxjs/toolkit';
+import { persistStore, persistReducer, Persistor } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import { Action, configureStore, Store, ThunkAction } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 import storeReducer from '../features/stores/storeSlice';
 import { combineReducers } from '@reduxjs/toolkit';
+import { apiMiddleware } from '@/app/middlewares/auth/tokenMiddleware';
 
 // Combine reducers into a root reducer
 const rootReducer = combineReducers({
@@ -14,18 +15,21 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'stores'], // Only persist auth and stores slices
+  whitelist: [],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-export const makeStore = () => {
+export const makeStore = (): {
+  store: Store<RootState>;
+  persistor: Persistor;
+} => {
   const store = configureStore({
-    reducer: persistedReducer, // Pass the persistedReducer
+    reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
-        serializableCheck: false, // Disable for redux-persist compatibility
-      }),
+        serializableCheck: false,
+      }).concat(apiMiddleware),
     devTools: process.env.NODE_ENV !== 'production',
   });
 
@@ -37,26 +41,16 @@ export const makeStore = () => {
 export const store = makeStore().store;
 export const persistor = makeStore().persistor;
 
-// Types as explained above
 export type AppStore = ReturnType<typeof makeStore>['store'];
-export type RootState = ReturnType<AppStore['getState']>;
-export type AppDispatch = AppStore['dispatch'];
+export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof rootReducer>;
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action<string>
+>;
 
-// import { configureStore } from '@reduxjs/toolkit';
-// import authReducer from '../features/auth/authSlice';
-// import storeReducer from '../features/stores/storeSlice';
-
-// export const makeStore = () => {
-//   return configureStore({
-//     reducer: {
-//       auth: authReducer,
-//       stores: storeReducer,
-//     },
-//     middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
-//     devTools: process.env.NODE_ENV !== 'production',
-//   });
-// };
-
-// export type AppStore = ReturnType<typeof makeStore>;
 // export type RootState = ReturnType<AppStore['getState']>;
 // export type AppDispatch = AppStore['dispatch'];
+// export type RootState = ReturnType<typeof store.getState>;

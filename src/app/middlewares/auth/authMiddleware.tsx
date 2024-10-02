@@ -39,6 +39,13 @@ export const generateTokenAPI = async (credentials: {
   }
 };
 
+export const refreshTokenAPI = async (refresh_token: string) => {
+  const response = await axios.post(`${baseUrl}/api/auth/token/refresh`, {
+    refresh_token,
+  });
+  return response.data;
+};
+
 //         } catch (error: unknown) {
 //           let errorMessage = 'Ocurrió un error, inténtalo más tarde';
 //           if (axios.isAxiosError(error)) {
