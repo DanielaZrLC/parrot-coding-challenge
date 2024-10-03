@@ -63,7 +63,11 @@ This project uses Commitizen and Commitlint to enforce standardized commit messa
 ```bash
 git commit -m ""
 ```
--You will be prompted to select the type of change (e.g., feat, fix, etc.) and enter a commit message. This standardizes commit messages and helps with generating changelogs.
+You will be prompted to select the type of change (e.g., feat, fix, etc.) and enter a commit message. This standardizes commit messages and helps with generating changelogs.
+
+## Commitizen Feature Demo
+
+![Commitizen Demo](https://media.giphy.com/media/c9c5Gft2w86IFQwtcZ/giphy.gif)
 
 <hr style="border: 2px solid #EF4C4D;" />
 

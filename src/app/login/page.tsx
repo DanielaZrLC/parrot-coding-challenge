@@ -28,7 +28,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  // const error = useSelector(selectAuthError);
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
