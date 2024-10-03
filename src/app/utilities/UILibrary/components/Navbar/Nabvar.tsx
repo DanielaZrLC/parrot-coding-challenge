@@ -23,7 +23,8 @@ const Navbar = () => {
         {isAuthenticated ? (
           <div>
             <p>
-              <span>Bienvenido {username}</span>
+              Bienvenido:
+              <span>{username}</span>
             </p>
           </div>
         ) : (

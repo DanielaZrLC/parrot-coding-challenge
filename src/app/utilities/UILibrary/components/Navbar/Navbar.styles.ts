@@ -48,6 +48,13 @@ export const NavLinks = styled.ul`
       a {
         font-size: ${uIFontSize.small};
       }
+      p {
+        font-size: ${uIFontSize.xSmall};
+      }
+      span {
+        font-size: 0.75rem;
+        font-weight: bold;
+      }
     }
   }
 `;

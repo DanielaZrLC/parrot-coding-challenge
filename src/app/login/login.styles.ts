@@ -85,3 +85,9 @@ export const LoginFormWrapper = styled.div`
     width: 400px;
   }
 `;
+
+export const ButtonSection = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
