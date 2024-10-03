@@ -29,6 +29,9 @@ const Login = () => {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const [message, setMessage] = useState<string | null>(null);
+  const [isError, setIsError] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onFinish = async (values: { username: string; password: string }) => {
@@ -44,23 +47,38 @@ const Login = () => {
     }
   };
 
+  const url = process.env.NEXT_PUBLIC_SES_URL;
+  console.log(url);
+
   const showModal = () => {
     setIsModalVisible(true);
+    setIsSubmitted(false);
   };
+
   const handleCancel = () => {
     setIsModalVisible(false);
+    setIsSubmitted(false);
   };
+
   const handleOk = async (values: { email: string }) => {
     setLoading(true);
+    setMessage(null);
+    setIsError(false);
     try {
-      const response = await axios.post(
-        'https://r17r0715xi.execute-api.us-east-1.amazonaws.com/dev/recover-account',
-        { email: values.email },
-      );
+      const response = await axios.post(`${url}/dev/recover-account`, {
+        email: values.email,
+      });
       console.log('Email sent successfully', response.data);
-      setIsModalVisible(false);
+      setMessage(
+        'Hemos enviado a tu correo la información para recuperar tu contraseña.',
+      );
+      setIsError(false);
+      setIsSubmitted(true);
     } catch (error) {
       console.error('Error sending email', error);
+      setMessage('Ocurrió un error, inténtalo más tarde.');
+      setIsError(true);
+      setIsSubmitted(true);
     } finally {
       setLoading(false);
     }
@@ -149,20 +167,34 @@ const Login = () => {
             onCancel={handleCancel}
             footer={null}
           >
-            <Form layout="vertical" onFinish={handleOk}>
-              <Form.Item
-                label="Correo electrónico"
-                name="email"
-                rules={[
-                  { required: true, message: 'Por favor ingresa tu correo!' },
-                ]}
+            {!isSubmitted ? (
+              <Form layout="vertical" onFinish={handleOk}>
+                <Form.Item
+                  label="Correo electrónico"
+                  name="email"
+                  rules={[
+                    { required: true, message: 'Por favor ingresa tu correo!' },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+                <ButtonSection>
+                  <Button style={{ alignSelf: 'center' }}>Enviar</Button>
+                </ButtonSection>
+              </Form>
+            ) : (
+              <div
+                style={{
+                  textAlign: 'center',
+                  color: isError ? '#EF4C4D' : '#47455F',
+                  fontSize: '20px',
+                  fontWeight: 'bold',
+                  padding: '15% 0',
+                }}
               >
-                <Input />
-              </Form.Item>
-              <ButtonSection>
-                <Button style={{ alignSelf: 'center' }}>Enviar</Button>
-              </ButtonSection>
-            </Form>
+                {message}
+              </div>
+            )}
           </Modal>
         </MainSection>
       )}
