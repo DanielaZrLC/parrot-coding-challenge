@@ -9,15 +9,17 @@ import {
 import { Button } from '@/app/utilities/UILibrary/components/Button';
 import { useRouter } from 'next/navigation';
 import {
+  ButtonSection,
   HomeContainer,
   LoginContainer,
   LoginFormWrapper,
   MainSection,
   TextHeader,
 } from './login.styles';
-import { Form, Input } from 'antd';
+import { Form, Input, Modal } from 'antd';
 import Loader from '@/app/utilities/UILibrary/components/Loader';
 import { fetchStoreAndProducts } from '@/app/lib/features/stores/storeSlice';
+import axios from 'axios';
 
 const Login = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -25,15 +27,44 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [isModalVisible, setIsModalVisible] = useState(false);
   // const error = useSelector(selectAuthError);
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onFinish = async (values: { username: string; password: string }) => {
     setLoading(true);
-    await dispatch(authenticationRequest({ username, password })).then(() => {
-      dispatch(fetchStoreAndProducts());
-    });
+    try {
+      await dispatch(authenticationRequest({ username, password })).unwrap();
+      await dispatch(fetchStoreAndProducts());
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Authentication error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  const handleOk = async (values: { email: string }) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        'https://r17r0715xi.execute-api.us-east-1.amazonaws.com/dev/recover-account',
+        { email: values.email },
+      );
+      console.log('Email sent successfully', response.data);
+      setIsModalVisible(false);
+    } catch (error) {
+      console.error('Error sending email', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -59,8 +90,10 @@ const Login = () => {
           </TextHeader>
           <LoginContainer>
             <h2>Inicia sesión</h2>
-            <p>¿No tienes cuenta?</p>
-            <h3>CONTACTO</h3>
+            <p>¿No recuerdas tu contraseña?</p>
+            <h3 onClick={showModal} style={{ cursor: 'pointer' }}>
+              CONTÁCTANOS
+            </h3>
             <LoginFormWrapper>
               <Form
                 name="auth-form"
@@ -105,10 +138,33 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </Form.Item>
-                <Button type="submit">Ingresar</Button>
+                <ButtonSection>
+                  <Button type="submit">Ingresar</Button>
+                </ButtonSection>
               </Form>
             </LoginFormWrapper>
           </LoginContainer>
+          <Modal
+            title="Recuperar Cuenta"
+            open={isModalVisible}
+            onCancel={handleCancel}
+            footer={null}
+          >
+            <Form layout="vertical" onFinish={handleOk}>
+              <Form.Item
+                label="Correo electrónico"
+                name="email"
+                rules={[
+                  { required: true, message: 'Por favor ingresa tu correo!' },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <ButtonSection>
+                <Button style={{ alignSelf: 'center' }}>Enviar</Button>
+              </ButtonSection>
+            </Form>
+          </Modal>
         </MainSection>
       )}
     </HomeContainer>

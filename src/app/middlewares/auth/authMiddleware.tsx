@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { setAccessToken, setRefreshToken } from '../../utils/tokenUtils';
-// import { getErrorMessage } from '../errorMessage';
+import { getErrorMessage } from '../errorMessage';
+import { message } from 'antd';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -34,7 +35,18 @@ export const generateTokenAPI = async (credentials: {
     return { access_token, refresh_token };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error: unknown) {
-    throw new Error('Failed to generate tokens');
+    let errorMessage = 'Ocurrió un error, inténtalo más tarde'; // Default message
+
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+
+      if (axiosError.response) {
+        errorMessage = getErrorMessage(axiosError.response.status); // Get custom message based on status code
+        console.error(`Error ${axiosError.response.status}: ${errorMessage}`);
+      }
+    }
+    message.error(errorMessage, 3);
+    throw new Error(errorMessage);
   }
 };
 
