@@ -1,26 +1,26 @@
-name-template: "v$RESOLVED_VERSION"
-tag-template: "v$RESOLVED_VERSION"
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
 categories:
-  - title: "🚀 Features"
+  - title: '🚀 Features'
     labels:
-      - "feature"
-  - title: "🐛 Bug Fixes"
+      - 'feature'
+  - title: '🐛 Bug Fixes'
     labels:
-      - "fix"
-  - title: "🧰 Maintenance"
+      - 'fix'
+  - title: '🧰 Maintenance'
     labels:
-      - "chore"
-      - "test"
-      - "documentation"
+      - 'chore'
+      - 'test'
+      - 'documentation'
 version-resolver:
   minor:
     labels:
-      - "feature"
+      - 'feature'
   patch:
     labels:
-      - "fix"
-      - "chore"
-      - "test"
+      - 'fix'
+      - 'chore'
+      - 'test'
   default: patch
 template: |
   ## Changes

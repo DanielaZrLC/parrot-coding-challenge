@@ -1,7 +1,7 @@
 module.exports = {
   env: {
-    node: true, // Enable Node.js global variables and Node.js scoping.
-    es2021: true, // Optionally enable ES2021 globals.
+    node: true,
+    es2021: true,
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
