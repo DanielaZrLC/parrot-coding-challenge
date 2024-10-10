@@ -61,11 +61,11 @@
   },
   "lint-staged": {
     "*.ts": [
-      "eslint --fix",
+      "eslint --max-warnings=0",
       "prettier --write"
     ],
     "*.tsx": [
-      "eslint --fix",
+      "eslint --max-warnings=0",
       "prettier --write"
     ]
   }
