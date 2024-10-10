@@ -79,6 +79,7 @@ const Login = () => {
       setMessage('Ocurrió un error, inténtalo más tarde.');
       setIsError(true);
       setIsSubmitted(true);
+      setIsRunning();
     } finally {
       setLoading(false);
     }
