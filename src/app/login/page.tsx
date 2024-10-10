@@ -48,7 +48,6 @@ const Login = () => {
   };
 
   const url = process.env.NEXT_PUBLIC_SES_URL;
-  console.log(url);
 
   const showModal = () => {
     setIsModalVisible(true);
