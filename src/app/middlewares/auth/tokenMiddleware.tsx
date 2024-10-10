@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { logout, refreshToken } from '@/app/lib/features/auth/authSlice';
 import { checkTokenStatus } from '@/app/utils/tokenUtils';
 import { Modal } from 'antd';

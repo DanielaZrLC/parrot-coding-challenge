@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["./eslint-plugin-react"],
     "lib": [
       "dom",
       "dom.iterable",

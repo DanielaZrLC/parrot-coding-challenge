@@ -68,12 +68,13 @@ const Login = () => {
       const response = await axios.post(`${url}/dev/recover-account`, {
         email: values.email,
       });
-      console.log('Email sent successfully', response.data);
-      setMessage(
-        'Hemos enviado a tu correo la información para recuperar tu contraseña.',
-      );
-      setIsError(false);
-      setIsSubmitted(true);
+      if (response.data) {
+        setMessage(
+          'Hemos enviado a tu correo la información para recuperar tu contraseña.',
+        );
+        setIsError(false);
+        setIsSubmitted(true);
+      }
     } catch (error) {
       console.error('Error sending email', error);
       setMessage('Ocurrió un error, inténtalo más tarde.');
