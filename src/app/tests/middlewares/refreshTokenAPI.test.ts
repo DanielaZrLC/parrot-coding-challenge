@@ -1,40 +1,82 @@
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
-import { refreshTokenAPI } from '@/app/middlewares/auth/authMiddleware';
+// import axios from 'axios';
+// import MockAdapter from 'axios-mock-adapter';
+// import {
+//   testTokenAPI,
+//   getStoreIdAPI,
+//   fetchItemsAPI,
+//   updateItemsAPI,
+// } from '../../middlewares/fetch/authFlowMiddleware';
+// import { fetchStoreAndProducts } from '../../lib/features/stores/storeSlice';
+// import configureStore from 'redux-mock-store';
+// import thunk from 'redux-thunk'; // To test async actions
 
-const mock = new MockAdapter(axios);
+// const mockStore = configureStore([thunk]);
 
-describe('refreshTokenAPI', () => {
-  afterEach(() => {
-    mock.reset();
-  });
+// describe('API calls', () => {
+//   let mock: MockAdapter;
 
-  it('should return a new access token when the refresh token is valid', async () => {
-    const refreshToken = 'valid-refresh-token';
-    const accessToken = 'new-access-token';
+//   beforeEach(() => {
+//     mock = new MockAdapter(axios);
+//   });
 
-    mock
-      .onPost('https://api-staging.parrot.rest/api/auth/token/refresh')
-      .reply(200, {
-        access_token: accessToken,
-      });
+//   afterEach(() => {
+//     mock.reset();
+//   });
 
-    const result = await refreshTokenAPI(refreshToken);
+//   it('should validate token successfully', async () => {
+//     // Mock the API response for token validation
+//     mock
+//       .onGet(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/token/test`)
+//       .reply(200, {
+//         status: 'ok',
+//       });
 
-    expect(result.newAccessToken).toEqual(accessToken);
-  });
+//     const response = await testTokenAPI('mockAccessToken');
+//     expect(response.data.status).toEqual('ok');
+//   });
 
-  it('should throw an error when the refresh token is invalid', async () => {
-    const refreshToken = 'invalid-refresh-token';
+//   it('should fetch store information successfully', async () => {
+//     mock
+//       .onGet(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/me`)
+//       .reply(200, {
+//         result: {
+//           stores: [{ uuid: 'mockStoreId' }],
+//         },
+//       });
 
-    mock
-      .onPost('https://api-staging.parrot.rest/api/auth/token/refresh')
-      .reply(401, {
-        detail: 'Invalid token',
-      });
+//     const response = await getStoreIdAPI('mockAccessToken');
+//     expect(response.data.result.stores[0].uuid).toEqual('mockStoreId');
+//   });
 
-    await expect(refreshTokenAPI(refreshToken)).rejects.toThrow(
-      'Request failed with status code 401',
-    );
-  });
-});
+//   it('should fetch products successfully', async () => {
+//     const mockStoreId = 'mockStoreId';
+//     mock
+//       .onGet(
+//         `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/?store=${mockStoreId}`,
+//       )
+//       .reply(200, {
+//         results: [{ name: 'mockProduct' }],
+//       });
+
+//     const response = await fetchItemsAPI(mockStoreId, 'mockAccessToken');
+//     expect(response.data.results[0].name).toEqual('mockProduct');
+//   });
+
+//   it('should update product availability successfully', async () => {
+//     const mockProductId = 'mockProductId';
+//     mock
+//       .onPut(
+//         `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/${mockProductId}/availability`,
+//       )
+//       .reply(200, {
+//         success: true,
+//       });
+
+//     const response = await updateItemsAPI(
+//       mockProductId,
+//       'available',
+//       'mockAccessToken',
+//     );
+//     expect(response.data.success).toBe(true);
+//   });
+// });

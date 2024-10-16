@@ -64,11 +64,3 @@ export const refreshTokenAPI = async (refresh_token: string) => {
     throw error;
   }
 };
-
-//         } catch (error: unknown) {
-//           let errorMessage = 'Ocurrió un error, inténtalo más tarde';
-//           if (axios.isAxiosError(error)) {
-//             const axiosError = error as AxiosError;
-
-//             if (axiosError.response) {
-//               errorMessage = getErrorMessage(axiosError.response.status);

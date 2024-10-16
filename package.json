@@ -38,7 +38,7 @@
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
 		"@types/styled-components": "^5.1.34",
-		"axios-mock-adapter": "^2.0.0",
+		"axios-mock-adapter": "^2.1.0",
 		"commitizen": "^4.3.1",
 		"cz-conventional-changelog": "^3.3.0",
 		"eslint": "^8.57.1",
@@ -59,16 +59,14 @@
 			"path": "./node_modules/cz-conventional-changelog"
 		}
 	},
-"lint-staged": {
-  "*.ts": [
-    "eslint --max-warnings=0 --no-fix",
-    "prettier --write"
-  ],
-  "*.tsx": [
-    "eslint --max-warnings=0 --no-fix",
-    "prettier --write"
-  ]
+	"lint-staged": {
+		"*.ts": [
+			"eslint --max-warnings=0 --no-fix",
+			"prettier --write"
+		],
+		"*.tsx": [
+			"eslint --max-warnings=0 --no-fix",
+			"prettier --write"
+		]
+	}
 }
-}
-
-

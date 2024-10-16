@@ -64,7 +64,7 @@ const Login = () => {
     setMessage(null);
     setIsError(false);
     try {
-      const response = await axios.post(`${url}/dev/recover-account`, {
+      const response = await axios.post(`${url}/dev/AccountRecoveryFunction`, {
         email: values.email,
       });
       if (response.data) {
